@@ -7,6 +7,7 @@ package org.ptodd;
  *
  * Created by ptdecker on 5/25/14.
  */
+
 class State {
 
     String name;
@@ -28,12 +29,9 @@ class State {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("State{")
-                .append("name='").append(this.name).append("\',links={")
-                .append(this.links.toString())
-                .append("},total=").append(this.totalWeight)
-                .append("}")
-                .toString();
+        return "State{" +
+                "name='" + this.name + "\'," +
+                "links={" + this.links.toString() + " + " +
+                "total=" + this.totalWeight + "}";
     }
 }

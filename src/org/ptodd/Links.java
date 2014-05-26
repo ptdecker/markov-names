@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 /**
  * Manages a set of links to other states
- * <p/>
+ *
  * Provides methods to manage a set of links. Each link records the name of the state and the accumulated weight
  * of the state. The 'recordLink' method will either add a new link if a link of the specified name does not already
  * exist. If it does, the the weight of the link is increased by one.
  *
- * <p/>
  * Created by ptdecker on 5/25/14.
  */
 

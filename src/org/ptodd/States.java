@@ -13,6 +13,7 @@ import java.util.ArrayList;
  *
  * Created by ptdecker on 5/25/14.
  */
+
 class States {
 
     ArrayList<State> states = new ArrayList<State>();
