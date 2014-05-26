@@ -5,8 +5,8 @@ import java.util.ArrayList;
 /**
  * Manages a set of links to other states
  *
- * Provides methods to manage a set of links. Each link records the name of the state and the accumulated weight
- * of the state. The 'recordLink' method will either add a new link if a link of the specified name does not already
+ * Provides methods to manage a set of links. Each link records the token of the state and the accumulated weight
+ * of the state. The 'recordLink' method will either add a new link if a link of the specified token does not already
  * exist. If it does, the the weight of the link is increased by one.
  *
  * Created by ptdecker on 5/25/14.
@@ -19,19 +19,19 @@ public class Links {
     public Links() {
     }
 
-    private Link findLink(String name) {
+    private Link findLink(char token) {
         for (Link link : links) {
-            if (link.getName().equals(name)) {
+            if (link.getToken() == token) {
                 return link;
             }
         }
         return null;
     }
 
-    public void recordLink(String name) {
-        Link link = findLink(name);
+    public void recordLink(char token) {
+        Link link = findLink(token);
         if (link == null) {
-            links.add(new Link(name));
+            links.add(new Link(token));
         } else {
             link.incCount();
         }

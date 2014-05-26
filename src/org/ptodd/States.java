@@ -16,29 +16,32 @@ import java.util.ArrayList;
 
 class States {
 
+    private static final char INITIAL_STATE = '\u001F'; // ASCII 'US' Unit Separator control character
+    private static final char FINAL_STATE = '\u0019'; // ASCII 'EM' End of Media control character
+
     ArrayList<State> states = new ArrayList<State>();
 
     States() {
-        recordLink("[Initial]", "[Final]");
+        recordLink(INITIAL_STATE, FINAL_STATE);
     }
 
-    private State findStateByName(String name) {
+    private State findStateByName(char token) {
         for (State oneState : states) {
-            if (oneState.getName().equals(name)) {
+            if (oneState.getName() == token) {
                 return oneState;
             }
         }
         return null;
     }
 
-    public void recordLink(String fromStateNamed, String toStateNamed) {
-        if (findStateByName(toStateNamed) == null) {
-            states.add(new State(toStateNamed));
+    public void recordLink(char fromState, char toState) {
+        if (findStateByName(toState) == null) {
+            states.add(new State(toState));
         }
-        if (findStateByName(fromStateNamed) == null) {
-            State S = new State(fromStateNamed);
+        if (findStateByName(fromState) == null) {
+            State S = new State(fromState);
             states.add(S);
-            S.recordLink(toStateNamed);
+            S.recordLink(toState);
         }
     }
 

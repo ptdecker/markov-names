@@ -3,7 +3,7 @@ package org.ptodd;
 /**
  * A Link
  *
- * A single instance of a link between nodes. The instance stores the name of the target node and the weight of
+ * A single instance of a link between nodes. The instance stores the token of the target node and the weight of
  * the link.
  *
  * Created by ptdecker on 5/25/14.
@@ -11,16 +11,16 @@ package org.ptodd;
 
 class Link {
 
-    String name = null;
+    char token = '\u0000';  // Unicode null
     long count = 0;
 
-    Link(String name) {
-        this.name = name;
+    Link(char name) {
+        this.token = name;
         this.count = 1;
     }
 
-    public String getName() {
-        return this.name;
+    public char getToken() {
+        return this.token;
     }
 
     public void incCount() {
@@ -33,6 +33,6 @@ class Link {
 
     @Override
     public String toString() {
-        return name + " (" + getCount() + ")";
+        return token + " (" + getCount() + ")";
     }
 }
