@@ -16,6 +16,7 @@ class Link {
 
     Link(String name) {
         this.name = name;
+        this.count = 1;
     }
 
     public String getName() {

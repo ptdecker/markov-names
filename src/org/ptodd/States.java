@@ -3,6 +3,14 @@ package org.ptodd;
 import java.util.ArrayList;
 
 /**
+ * Markov state machine
+ *
+ * Defines a Markov state machine which stores a set of node states, the links between them, and the weight of
+ * each link.
+ *
+ * An initially created Markov state machine will have two states named ("[Initial]" and "[Final]") with one
+ * connection (a weight of one) between the two.
+ *
  * Created by ptdecker on 5/25/14.
  */
 class States {
@@ -13,23 +21,23 @@ class States {
         recordLink("[Initial]", "[Final]");
     }
 
-    private State findStateByName(String S) {
+    private State findStateByName(String name) {
         for (State oneState : states) {
-            if (oneState.getName() == S) {
+            if (oneState.getName().equals(name)) {
                 return oneState;
             }
         }
         return null;
     }
 
-    public void recordLink(String S1, String S2) {
-        if (findStateByName(S2) == null) {
-            states.add(new State(S2));
+    public void recordLink(String fromStateNamed, String toStateNamed) {
+        if (findStateByName(toStateNamed) == null) {
+            states.add(new State(toStateNamed));
         }
-        if (findStateByName(S1) == null) {
-            State S = new State(S1);
+        if (findStateByName(fromStateNamed) == null) {
+            State S = new State(fromStateNamed);
             states.add(S);
-            S.recordLink(S2);
+            S.recordLink(toStateNamed);
         }
     }
 
