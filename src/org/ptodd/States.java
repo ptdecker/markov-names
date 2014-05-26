@@ -16,13 +16,10 @@ import java.util.ArrayList;
 
 class States {
 
-    private static final char INITIAL_STATE = '\u001F'; // ASCII 'US' Unit Separator control character
-    private static final char FINAL_STATE = '\u0019'; // ASCII 'EM' End of Media control character
-
     ArrayList<State> states = new ArrayList<State>();
 
     States() {
-        recordLink(INITIAL_STATE, FINAL_STATE);
+        recordLink(Constants.INITIAL_STATE, Constants.FINAL_STATE);
     }
 
     private State findStateByName(char token) {

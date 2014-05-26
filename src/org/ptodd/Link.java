@@ -11,9 +11,6 @@ package org.ptodd;
 
 class Link {
 
-    private static final char INITIAL_STATE = '\u001F'; // ASCII 'US' Unit Separator control character
-    private static final char FINAL_STATE = '\u0019'; // ASCII 'EM' End of Media control character
-
     char token = '\u0000';  // Unicode null
     long count = 0;
 
@@ -36,7 +33,7 @@ class Link {
 
     @Override
     public String toString() {
-        return (token == INITIAL_STATE) ? "INITIAL" : ((token == FINAL_STATE) ? "FINAL" : token)
+        return (token == Constants.INITIAL_STATE) ? "INITIAL" : ((token == Constants.FINAL_STATE) ? "FINAL" : token)
                 + " (" + getCount() + ")";
     }
 }
