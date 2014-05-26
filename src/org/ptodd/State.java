@@ -32,6 +32,10 @@ class State {
         }
     }
 
+    public char followRandomLinkToken() {
+        return links.getRandomLinkToken();
+    }
+
     public long getTotalWeight() {
         return this.totalWeight;
     }

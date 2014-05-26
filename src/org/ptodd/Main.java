@@ -10,13 +10,12 @@ public class Main {
         States mtm = new States();
         try {
             File dir = new File(".");
-            String fn = dir.getCanonicalPath() + File.separator + "testnames.txt";
-            System.out.println(fn);
-            File fin = new File(fn);
+            File fin = new File(dir.getCanonicalPath() + File.separator + "testnames.txt");
             mtm.trainFrom(fin);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(mtm.toString());
+        System.out.println(mtm.getMarkovName());
+//        System.out.println(mtm.toString());
     }
 }

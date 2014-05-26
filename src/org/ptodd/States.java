@@ -33,7 +33,7 @@ class States {
         addState(new State(token));
     }
 
-    private State findStateByName(char token) {
+    private State findStateByToken(char token) {
         for (State oneState : states) {
             if (oneState.getToken() == token) {
                 return oneState;
@@ -42,32 +42,42 @@ class States {
         return null;
     }
 
-    private State getFirstState() {
-        return findStateByName(Constants.INITIAL_STATE);
+    private State getInitialState() {
+        return findStateByToken(Constants.INITIAL_STATE);
+    }
+
+    private State getFinalState() {
+        return findStateByToken(Constants.FINAL_STATE);
+    }
+
+    private State getNextRandomState(State state) {
+        return findStateByToken(state.followRandomLinkToken());
     }
 
     public boolean isTrained() {
-        return (getFirstState().getTotalWeight() > 0);
+        return (getInitialState().getTotalWeight() > 0);
     }
 
     private void recordLink(char fromState, char toState) {
-        if (findStateByName(fromState) == null) {
+        if (findStateByToken(fromState) == null) {
             addState(fromState);
         }
-        if (findStateByName(toState) == null) {
+        if (findStateByToken(toState) == null) {
             addState(toState);
         }
-        findStateByName(fromState).recordLink(toState);
+        findStateByToken(fromState).recordLink(toState);
     }
 
     public void trainFrom(String text) {
         if (text != null && !text.isEmpty()) {
-            String upCase = text.toUpperCase(Locale.getDefault());
-            recordLink(Constants.INITIAL_STATE, upCase.charAt(0));
-            for (int i = 1; i < upCase.length(); i++) {
-                recordLink(upCase.charAt(i - 1), upCase.charAt(i));
+            String cleanedText = text
+                    .toUpperCase(Locale.getDefault())   // convert to upper case
+                    .replaceAll("\\W", "");             // and strip non-word characters (including spaces)
+            recordLink(Constants.INITIAL_STATE, cleanedText.charAt(0));
+            for (int i = 1; i < cleanedText.length(); i++) {
+                recordLink(cleanedText.charAt(i - 1), cleanedText.charAt(i));
             }
-            recordLink(upCase.charAt(upCase.length() - 1), Constants.FINAL_STATE);
+            recordLink(cleanedText.charAt(cleanedText.length() - 1), Constants.FINAL_STATE);
         }
     }
 
@@ -76,16 +86,36 @@ class States {
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
         String line;
         while ((line = br.readLine()) != null) {
-            System.out.println(line);
             trainFrom(line);
         }
         br.close();
         fis.close();
     }
 
+    private String getRawName() {
+        StringBuilder name = new StringBuilder();
+        State state = getInitialState();
+        while (state != getFinalState()) {
+            state = getNextRandomState(state);
+            if (state != getFinalState()) {
+                name.append(state.getName());
+            }
+        }
+        return name.toString();
+    }
+
     public String getMarkovName() {
         if (isTrained()) {
-            return "";
+            do {
+                String rawName = getRawName();
+                if (rawName.length() < 3) {
+                    continue;
+                }
+                if (rawName.length() > 8) {
+                    continue;
+                }
+                return rawName;
+            } while (true);
         } else {
             // TODO: Convert to throwing an appropriate custom exception
             return "To render a name, please train me first";
