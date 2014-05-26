@@ -2,25 +2,35 @@ package org.ptodd;
 
 /**
  * A Link
- *
+ * <p/>
  * A single instance of a link between nodes. The instance stores the token of the target node and the weight of
  * the link.
- *
+ * <p/>
  * Created by ptdecker on 5/25/14.
  */
 
 class Link {
 
-    char token = '\u0000';  // Unicode null
-    long count = 0;
+    private Character token = Constants.NULL_STATE;  // Unicode null
+    private long count = 0;
 
     Link(char name) {
         this.token = name;
-        this.count = 1;
+        this.count = 0;
     }
 
-    public char getToken() {
+    public Character getToken() {
         return this.token;
+    }
+
+    public String getName() {
+        if (getToken() == Constants.INITIAL_STATE) {
+            return "INITIAL";
+        } else if (getToken() == Constants.FINAL_STATE) {
+            return "FINAL";
+        } else {
+            return getToken().toString();
+        }
     }
 
     public void incCount() {
@@ -33,7 +43,6 @@ class Link {
 
     @Override
     public String toString() {
-        return (token == Constants.INITIAL_STATE) ? "INITIAL" : ((token == Constants.FINAL_STATE) ? "FINAL" : token)
-                + " (" + getCount() + ")";
+        return getName() + " (" + getCount() + ")";
     }
 }

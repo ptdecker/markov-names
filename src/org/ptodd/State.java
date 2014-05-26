@@ -2,36 +2,54 @@ package org.ptodd;
 
 /**
  * Tracks an individual Markov state
- *
+ * <p/>
  * A single Markov state has a token and a list of other states that it links to.
- *
+ * <p/>
  * Created by ptdecker on 5/25/14.
  */
 
 class State {
 
-    char token;
-    Links links = new Links();
-    long totalWeight = 0;
+    private Character token;
+    private Links links = new Links();
+    private long totalWeight = 0;
 
     State(char token) {
         this.token = token;
     }
 
-    public char getName() {
+    public Character getToken() {
         return this.token;
     }
 
-    public void recordLink(char name) {
-        links.recordLink(name);
+    public String getName() {
+        if (getToken() == Constants.INITIAL_STATE) {
+            return "INITIAL";
+        } else if (getToken() == Constants.FINAL_STATE) {
+            return "FINAL";
+        } else {
+            return getToken().toString();
+        }
+    }
+
+    public long getTotalWeight() {
+        return this.totalWeight;
+    }
+
+    public String getLinksAsString() {
+        return this.links.toString();
+    }
+
+    public void recordLink(char token) {
+        links.recordLink(token);
         this.totalWeight++;
     }
 
     @Override
     public String toString() {
         return "State{" +
-                "token='" + this.token + "\'," +
-                "links={" + this.links.toString() + " + " +
-                "total=" + this.totalWeight + "}";
+                "token='" + getName() + "\'," +
+                "links={" + getLinksAsString() + "}, " +
+                "total=" + getTotalWeight() + "}";
     }
 }

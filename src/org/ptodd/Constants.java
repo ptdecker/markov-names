@@ -8,6 +8,7 @@ package org.ptodd;
 
 interface Constants {
 
+    static final char NULL_STATE = '\u0000'; // ASCII 'NULL' control character
     static final char INITIAL_STATE = '\u001F'; // ASCII 'US' Unit Separator control character
     static final char FINAL_STATE = '\u0019'; // ASCII 'EM' End of Media control character
 

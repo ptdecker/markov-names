@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 /**
  * Manages a set of links to other states
- *
+ * <p/>
  * Provides methods to manage a set of links. Each link records the token of the state and the accumulated weight
  * of the state. The 'recordLink' method will either add a new link if a link of the specified token does not already
  * exist. If it does, the the weight of the link is increased by one.
- *
+ * <p/>
  * Created by ptdecker on 5/25/14.
  */
 
@@ -29,12 +29,10 @@ public class Links {
     }
 
     public void recordLink(char token) {
-        Link link = findLink(token);
-        if (link == null) {
+        if (findLink(token) == null) {
             links.add(new Link(token));
-        } else {
-            link.incCount();
         }
+        findLink(token).incCount();
     }
 
     @Override
