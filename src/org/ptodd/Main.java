@@ -7,12 +7,31 @@ class Link {
     State toState = null;
     long count = 0;
 
+    Link(State S) {
+        this.toState = S;
+    }
+
+    public State getToState() {
+        return toState;
+    }
+
+    public void incCount() {
+        this.count++;
+    }
+
+    public long getCount() {
+        return this.count;
+    }
 }
 
 class State {
 
     String name;
     ArrayList<Link> links;
+
+    State() {
+
+    }
 
     State(String name) {
         this.name = name;
@@ -27,10 +46,14 @@ class State {
         this.name = name;
     }
 
-    public String getLinksAsString () {
+    public void addLink(String name) {
+
+    }
+
+    public String getLinksAsString() {
         StringBuilder linksAsString = new StringBuilder("No Links");
         if (links.size() > 0) {
-            linksAsString.delete(0,linksAsString.length());
+            linksAsString.delete(0, linksAsString.length());
             for (Link oneLink : links) {
                 linksAsString.append(oneLink.toString());
             }
@@ -55,6 +78,7 @@ class States {
     States() {
         addState(new State("[initial]"));
         addState(new State("[final]"));
+        addLinkByName("[initial]", "[final]");
     }
 
     private void addState(State S) {
@@ -63,7 +87,7 @@ class States {
 
     private State findStateByName(String S) {
         for (State oneState : states) {
-            if (oneState.getName() = S) {
+            if (oneState.getName() == S) {
                 return oneState;
             }
         }
@@ -71,7 +95,13 @@ class States {
     }
 
     private void addLinkByName(String L1, String L2) {
-        
+        State S = new State();
+        if (S == null) {
+            System.out.println("State not found\n");
+        } else {
+            System.out.println("State found\n");
+        }
+
     }
 
     @Override
@@ -91,5 +121,5 @@ public class Main {
         States mtm = new States();
         System.out.println(mtm.toString());
 
-   }
+    }
 }
