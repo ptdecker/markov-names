@@ -10,13 +10,7 @@ class States {
     ArrayList<State> states = new ArrayList<State>();
 
     States() {
-        addState(new State("[initial]"));
-        addState(new State("[final]"));
-        addLinkByName("[initial]", "[final]");
-    }
-
-    private void addState(State S) {
-        states.add(S);
+        recordLink("[Initial]", "[Final]");
     }
 
     private State findStateByName(String S) {
@@ -28,21 +22,22 @@ class States {
         return null;
     }
 
-    private void addLinkByName(String L1, String L2) {
-        State S = new State();
-        if (S == null) {
-            System.out.println("State not found\n");
-        } else {
-            System.out.println("State found\n");
+    public void recordLink(String S1, String S2) {
+        if (findStateByName(S2) == null) {
+            states.add(new State(S2));
         }
-
+        if (findStateByName(S1) == null) {
+            State S = new State(S1);
+            states.add(S);
+            S.recordLink(S2);
+        }
     }
 
     @Override
     public String toString() {
         StringBuilder stateList = new StringBuilder();
         for (State oneState : states) {
-            stateList.append(oneState.toString() + "\n");
+            stateList.append(oneState.toString()).append('\n');
         }
         return stateList.toString();
     }

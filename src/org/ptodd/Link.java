@@ -1,19 +1,25 @@
 package org.ptodd;
 
 /**
+ * A Link
+ *
+ * A single instance of a link between nodes. The instance stores the name of the target node and the weight of
+ * the link.
+ *
  * Created by ptdecker on 5/25/14.
  */
+
 class Link {
 
-    State toState = null;
+    String name = null;
     long count = 0;
 
-    Link(State S) {
-        this.toState = S;
+    Link(String name) {
+        this.name = name;
     }
 
-    public State getToState() {
-        return toState;
+    public String getName() {
+        return this.name;
     }
 
     public void incCount() {
@@ -22,5 +28,10 @@ class Link {
 
     public long getCount() {
         return this.count;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + getCount() + ")";
     }
 }
