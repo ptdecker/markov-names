@@ -6,19 +6,22 @@ import java.util.Locale;
 
 /**
  * Markov state machine
- * <p/>
+ *
  * Defines a Markov state machine which stores a set of node states, the links between them, and the weight of
  * each link.
- * <p/>
+ *
  * An initially created Markov state machine will have two states named ("[Initial]" and "[Final]") with one
  * connection (a weight of one) between the two.
- * <p/>
+ *
  * Created by ptdecker on 5/25/14.
  */
 
 class States {
 
-    ArrayList<State> states = new ArrayList<State>();
+    private ArrayList<State> states = new ArrayList<State>();
+    private int minSize = Integer.MAX_VALUE;
+    private int maxSize = Integer.MIN_VALUE;
+    private int maxRepeats = Integer.MIN_VALUE;
 
     States() {
         addState(Constants.INITIAL_STATE);
@@ -70,12 +73,31 @@ class States {
 
     public void trainFrom(String text) {
         if (text != null && !text.isEmpty()) {
+            char lastToken;
+            int repeatCount;
             String cleanedText = text
                     .toUpperCase(Locale.getDefault())   // convert to upper case
                     .replaceAll("\\W", "");             // and strip non-word characters (including spaces)
+            if (cleanedText.length() > maxSize) {
+                maxSize = cleanedText.length();
+            }
+            if (cleanedText.length() < minSize) {
+                minSize = cleanedText.length();
+            }
             recordLink(Constants.INITIAL_STATE, cleanedText.charAt(0));
+            lastToken = cleanedText.charAt(0);
+            repeatCount = 1;
             for (int i = 1; i < cleanedText.length(); i++) {
                 recordLink(cleanedText.charAt(i - 1), cleanedText.charAt(i));
+                if (cleanedText.charAt(i) == lastToken) {
+                    repeatCount++;
+                    if (repeatCount > maxRepeats) {
+                        maxRepeats = repeatCount;
+                    }
+                } else {
+                    lastToken = cleanedText.charAt(i);
+                    repeatCount = 1;
+                }
             }
             recordLink(cleanedText.charAt(cleanedText.length() - 1), Constants.FINAL_STATE);
         }
@@ -104,14 +126,25 @@ class States {
         return name.toString();
     }
 
+    private int countRepeats(String text) {
+        int count = 1;
+        int max = 0;
+        for (int i = 1; i < text.length(); i++) {
+            count = (text.charAt(i) == text.charAt(i - 1)) ? (count + 1) : 1;
+            if (count > max) {
+                max = count;
+            }
+        }
+        return max;
+    }
+
     public String getMarkovName() {
         if (isTrained()) {
             do {
                 String rawName = getRawName();
-                if (rawName.length() < 3) {
-                    continue;
-                }
-                if (rawName.length() > 8) {
+                if ((countRepeats(rawName) > maxRepeats) ||
+                        (rawName.length() < minSize) ||
+                        (rawName.length() > maxSize)) {
                     continue;
                 }
                 return rawName;
