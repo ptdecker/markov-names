@@ -23,7 +23,7 @@ class Link {
         return this.token;
     }
 
-    public String getName() {
+    String getName() {
         if (getToken() == Constants.INITIAL_STATE) {
             return "INITIAL";
         } else if (getToken() == Constants.FINAL_STATE) {

@@ -16,28 +16,30 @@ import java.util.Locale;
  * Created by ptdecker on 5/25/14.
  */
 
-class States {
+class States implements Constants {
 
-    private ArrayList<State> states = new ArrayList<State>();
+    private final ArrayList<State> states = new ArrayList<State>();
     private int minSize = Integer.MAX_VALUE;
     private int maxSize = Integer.MIN_VALUE;
     private int maxRepeats = Integer.MIN_VALUE;
 
     States() {
-        addState(Constants.INITIAL_STATE);
-        addState(Constants.FINAL_STATE);
+        addState(INITIAL_STATE);
+        addState(FINAL_STATE);
     }
 
     private void addState(State state) {
-        states.add(state);
+        this.states.add(state);
     }
 
     private void addState(char token) {
-        addState(new State(token));
+        if (findStateByToken(token) == null) {
+            addState(new State(token));
+        }
     }
 
     private State findStateByToken(char token) {
-        for (State oneState : states) {
+        for (State oneState : this.states) {
             if (oneState.getToken() == token) {
                 return oneState;
             }
@@ -46,60 +48,54 @@ class States {
     }
 
     private State getInitialState() {
-        return findStateByToken(Constants.INITIAL_STATE);
+        return findStateByToken(INITIAL_STATE);
     }
 
     private State getFinalState() {
-        return findStateByToken(Constants.FINAL_STATE);
+        return findStateByToken(FINAL_STATE);
     }
 
     private State getNextRandomState(State state) {
         return findStateByToken(state.followRandomLinkToken());
     }
 
-    public boolean isTrained() {
+    boolean isTrained() {
         return (getInitialState().getTotalWeight() > 0);
     }
 
     private void recordLink(char fromState, char toState) {
-        if (findStateByToken(fromState) == null) {
-            addState(fromState);
-        }
-        if (findStateByToken(toState) == null) {
-            addState(toState);
-        }
+        addState(fromState);
+        addState(toState);
         findStateByToken(fromState).recordLink(toState);
     }
 
-    public void trainFrom(String text) {
+    void trainFrom(String text) {
         if (text != null && !text.isEmpty()) {
             char lastToken;
             int repeatCount;
-            String cleanedText = text
-                    .toUpperCase(Locale.getDefault())   // convert to upper case
-                    .replaceAll("\\W", "");             // and strip non-word characters (including spaces)
-            if (cleanedText.length() > maxSize) {
-                maxSize = cleanedText.length();
+            String cleanedText = text.toUpperCase(Locale.getDefault()).replaceAll("\\W", "");
+            if (cleanedText.length() > this.maxSize) {
+                this.maxSize = cleanedText.length();
             }
-            if (cleanedText.length() < minSize) {
-                minSize = cleanedText.length();
+            if (cleanedText.length() < this.minSize) {
+                this.minSize = cleanedText.length();
             }
-            recordLink(Constants.INITIAL_STATE, cleanedText.charAt(0));
+            recordLink(INITIAL_STATE, cleanedText.charAt(0));
             lastToken = cleanedText.charAt(0);
             repeatCount = 1;
             for (int i = 1; i < cleanedText.length(); i++) {
                 recordLink(cleanedText.charAt(i - 1), cleanedText.charAt(i));
                 if (cleanedText.charAt(i) == lastToken) {
                     repeatCount++;
-                    if (repeatCount > maxRepeats) {
-                        maxRepeats = repeatCount;
+                    if (repeatCount > this.maxRepeats) {
+                        this.maxRepeats = repeatCount;
                     }
                 } else {
                     lastToken = cleanedText.charAt(i);
                     repeatCount = 1;
                 }
             }
-            recordLink(cleanedText.charAt(cleanedText.length() - 1), Constants.FINAL_STATE);
+            recordLink(cleanedText.charAt(cleanedText.length() - 1), FINAL_STATE);
         }
     }
 
@@ -138,16 +134,22 @@ class States {
         return max;
     }
 
+    // the length check in the conditional below of makes sure, at a minimum, we have a name whose length is greater
+    // then '2' or the range defined by 'minSize' and 'maxSize'. The reason for the special check for length '2' is
+    // a cheat to insure that we do not get an out of bound error in the substring method included in the code that
+    // converts the returned name to mixed case.
+
     public String getMarkovName() {
         if (isTrained()) {
             do {
                 String rawName = getRawName();
-                if ((countRepeats(rawName) > maxRepeats) ||
-                        (rawName.length() < minSize) ||
-                        (rawName.length() > maxSize)) {
+                if ((countRepeats(rawName) > this.maxRepeats) ||
+                        (rawName.length() < this.minSize) ||
+                        (rawName.length() < 2) || // <-- see method comments for details about this
+                        (rawName.length() > this.maxSize)) {
                     continue;
                 }
-                return rawName;
+                return rawName.substring(0, 1).concat(rawName.substring(1).toLowerCase(Locale.getDefault()));
             } while (true);
         } else {
             // TODO: Convert to throwing an appropriate custom exception
@@ -158,7 +160,7 @@ class States {
     @Override
     public String toString() {
         StringBuilder stateList = new StringBuilder();
-        for (State oneState : states) {
+        for (State oneState : this.states) {
             stateList.append(oneState.toString()).append('\n');
         }
         return stateList.toString();

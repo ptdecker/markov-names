@@ -8,11 +8,10 @@ package org.ptodd;
  * Created by ptdecker on 5/25/14.
  */
 
-class State {
+class State implements Constants {
 
-    private Character token;
-    private Links links = new Links();
-    private long totalWeight = 0;
+    private final Character token;
+    private final Links links = new Links();
 
     State(char token) {
         this.token = token;
@@ -23,30 +22,29 @@ class State {
     }
 
     public String getName() {
-        if (getToken() == Constants.INITIAL_STATE) {
+        if (getToken() == INITIAL_STATE) {
             return "INITIAL";
-        } else if (getToken() == Constants.FINAL_STATE) {
+        } else if (getToken() == FINAL_STATE) {
             return "FINAL";
         } else {
             return getToken().toString();
         }
     }
 
-    public char followRandomLinkToken() {
-        return links.getRandomLinkToken();
-    }
-
     public long getTotalWeight() {
-        return this.totalWeight;
+        return this.links.getTotalWeight();
     }
 
-    public String getLinksAsString() {
+    String getLinksAsString() {
         return this.links.toString();
+    }
+
+    public char followRandomLinkToken() {
+        return this.links.getWeightedRandomLinkToken();
     }
 
     public void recordLink(char token) {
         links.recordLink(token);
-        this.totalWeight++;
     }
 
     @Override

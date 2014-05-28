@@ -13,18 +13,20 @@ import java.util.Random;
  * Created by ptdecker on 5/25/14.
  */
 
-public class Links {
+class Links {
 
-    private Random randomNumberGenerator;
-    private ArrayList<Link> links;
+    private final Random randomNumberGenerator;
+    private final ArrayList<Link> links;
+    private int totalWeight;
 
     public Links() {
-        links = new ArrayList<Link>();
-        randomNumberGenerator = new Random();
+        this.links = new ArrayList<Link>();
+        this.randomNumberGenerator = new Random();
+        this.totalWeight = 0;
     }
 
     private Link findLink(char token) {
-        for (Link link : links) {
+        for (Link link : this.links) {
             if (link.getToken() == token) {
                 return link;
             }
@@ -32,24 +34,35 @@ public class Links {
         return null;
     }
 
-    public char getRandomLinkToken() {
-        int index = randomNumberGenerator.nextInt(links.size());
-        return links.get(index).getToken();
+    public int getTotalWeight() {
+        return this.totalWeight;
+    }
+
+    public char getWeightedRandomLinkToken() {
+        int index = randomNumberGenerator.nextInt(getTotalWeight());
+        int cumulativeWeight = 0;
+        int i = 0;
+        do {
+            cumulativeWeight += this.links.get(i).getCount();
+            i++;
+        } while ((cumulativeWeight - 1) < index);
+        return links.get(i - 1).getToken();
     }
 
     public void recordLink(char token) {
         if (findLink(token) == null) {
-            links.add(new Link(token));
+            this.links.add(new Link(token));
         }
         findLink(token).incCount();
+        this.totalWeight++;
     }
 
     @Override
     public String toString() {
         StringBuilder linksStr = new StringBuilder("'");
-        for (int i = 0; i < links.size(); i++) {
+        for (int i = 0; i < this.links.size(); i++) {
             linksStr.append((i > 0) ? "','" : "");
-            linksStr.append(links.get(i).toString());
+            linksStr.append(this.links.get(i).toString());
         }
         return linksStr.append("'").toString();
     }
