@@ -16,7 +16,7 @@ import java.util.Locale;
  * Created by ptdecker on 5/25/14.
  */
 
-class States implements Constants {
+public class States implements Constants {
 
     private final ArrayList<State> states = new ArrayList<State>();
     private int minSize = Integer.MAX_VALUE;
