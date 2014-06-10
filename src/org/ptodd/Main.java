@@ -16,6 +16,6 @@ class Main {
             System.out.println(e.getMessage());
         }
         System.out.println(mtm.getMarkovName());
-//        System.out.println(mtm.toString());
+
     }
 }
