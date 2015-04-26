@@ -1,0 +1,13 @@
+{
+  "name": "markov-names",
+  "description": "Markov Chain-based Name Generator",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "async":"0.9.x"
+  },
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/ptdecker/markov-names.git"
+  }
+}
